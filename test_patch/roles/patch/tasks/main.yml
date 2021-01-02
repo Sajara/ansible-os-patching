@@ -1,0 +1,6 @@
+---
+# tasks file for patch
+  - name: Starting the patching process
+    yum:
+      name: "*"
+      state: latest

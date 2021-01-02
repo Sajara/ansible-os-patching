@@ -1,0 +1,28 @@
+---
+# tasks file for post_patch
+  - name: Comparing last kernel and running kernel
+    shell: |
+      last_kernel=$(rpm -q --last kernel | perl -pe 's/^kernel-(\S+).*/$1/' | head -1)
+      current_kernel=$(uname -r)
+        if [[ $last_kernel != $current_kernel ]]; then
+           touch /tmp/reboot
+        fi
+  - name: Checking if reboot is necessary
+    stat:
+      path: /tmp/reboot
+    register: reboot
+  - name: Rebooting
+    shell: "sleep 5 && reboot"
+    async: 10
+    poll: 0
+    when: reboot.stat.exists==true
+  - name: Waiting for connection
+    wait_for:
+      port: 22
+      delay: 120
+    delegate_to: localhost
+    when: reboot.stat.exists==true     
+  - name: Check the uptime of servers
+    shell: "uptime"
+    register: uptime
+  - debug: var=uptime.stdout

@@ -1,0 +1,6 @@
+---
+# tasks file for pre_update
+  - name: Stopping the running services
+    service: 
+      name: nginx
+      state: stopped

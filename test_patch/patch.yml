@@ -1,0 +1,10 @@
+---
+  - name: Patching all servers
+    hosts: all
+    gather_facts: false
+    become: yes
+    roles:
+      - pre_update
+      - patch
+      - post_patch
+      - start_services

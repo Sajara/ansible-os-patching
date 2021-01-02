@@ -1,0 +1,6 @@
+---
+# tasks file for start_services
+  - name: Starting the services because the patch is completed
+    service:
+      name: nginx
+      state: started
